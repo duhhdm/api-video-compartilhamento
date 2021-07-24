@@ -105,12 +105,12 @@ class VideoResourceTest {
 	
 	@Test
 	void atualizarVideos() throws Exception{
-		VideoDto videoDto = new VideoDto("testando","teste","www");
+		VideoDto videoDto = new VideoDto(Long.parseLong("1"),"testando","teste","www");
 		Video video = videoDto.converterVideoPost(videoDto);
 		Gson gson = new Gson();
 		Video video1 = new Video(Long.parseLong("1"),"testando","teste", "");
 		video.setIdVideo(Long.parseLong("1"));
-		String json = gson.toJson(video);
+		String json = gson.toJson(videoDto);
 		
 		when(videoRepository.save(video)).thenReturn(video);
 		Mockito.when(videoService.findById(video.getIdVideo())).thenReturn(video1);
