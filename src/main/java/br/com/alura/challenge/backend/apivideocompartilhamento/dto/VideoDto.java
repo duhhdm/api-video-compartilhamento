@@ -7,6 +7,8 @@ import br.com.alura.challenge.backend.apivideocompartilhamento.domain.Video;
 
 public class VideoDto {
 	
+	private Long idTitulo;
+	
 	@NotEmpty(message = "Campo Titulo obrigatorio")
 	private String dsTitulo;
 	
@@ -26,6 +28,14 @@ public class VideoDto {
 
 	public void setDsTitulo(String dsTitulo) {
 		this.dsTitulo = dsTitulo;
+	}
+	
+	public Long getIdTitulo() {
+		return idTitulo;
+	}
+
+	public void setIdTitulo(Long idTitulo) {
+		this.idTitulo = idTitulo;
 	}
 
 	public String getDsVideo() {
@@ -50,9 +60,20 @@ public class VideoDto {
 		this.dsVideo = dsVideo;
 		this.dsUrl = dsUrl;
 	}
+	
+	public VideoDto(Long idTitulo, String dsTitulo, String dsVideo, String dsUrl) {
+		super();
+		this.idTitulo = idTitulo;
+		this.dsTitulo = dsTitulo;
+		this.dsVideo = dsVideo;
+		this.dsUrl = dsUrl;
+	}
 
 	public Video converterVideoPost(VideoDto videoDto) {
-		Video video = new Video(null,videoDto.getDsTitulo(),videoDto.getDsVideo(),videoDto.getDsUrl());
-		return video;
+		return new Video(null,videoDto.getDsTitulo(),videoDto.getDsVideo(),videoDto.getDsUrl());
+	}
+	
+	public Video converterVideoPut(VideoDto videoDto) {
+		return new Video(videoDto.getIdTitulo(),videoDto.getDsTitulo(),videoDto.getDsVideo(),videoDto.getDsUrl());
 	}
 }

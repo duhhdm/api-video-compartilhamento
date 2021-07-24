@@ -1,6 +1,7 @@
 package br.com.alura.challenge.backend.apivideocompartilhamento.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,14 +29,11 @@ public class VideoService {
 	}
 	
 	public Video findById(Long id) {
-		Video video = new Video();
-		try {
-			video = videoRepository.findById(id).get();
-			return video;
-		}catch(Exception e) {
-			log.error("Erro ao buscar video ID -> "+id);
+		Optional<Video> video = videoRepository.findById(id);
+		if(video.isPresent())
+			return video.get();
+		else
 			return null;
-		}
 		
 		
 	}

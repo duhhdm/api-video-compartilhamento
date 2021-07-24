@@ -1,18 +1,21 @@
 package br.com.alura.challenge.backend.apivideocompartilhamento.resource;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alura.challenge.backend.apivideocompartilhamento.domain.Video;
@@ -28,11 +31,10 @@ public class VideoResource {
 	
 	static final Logger log = LogManager.getLogger(VideoResource.class);
 
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	public ResponseEntity<List<Video>> listarVideos(){
 		log.info("INICIANDO LISTAR VIDEOS");
-		List<Video> list = new ArrayList<>();
-		list = videoService.findAll();
+		List<Video> list = videoService.findAll();
 		if(list.isEmpty()) {
 			log.info("FINALIZANDO LISTAR VIDEOS");
 			return ResponseEntity.notFound().build();
@@ -43,8 +45,8 @@ public class VideoResource {
 		}
 	}
 	
-	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> inserirVideos(@Valid @RequestBody VideoDto videoDto) {
+	@PostMapping
+	public ResponseEntity<HttpServletResponse> inserirVideos(@Valid @RequestBody VideoDto videoDto) {
 		log.info("INICIANDO INCLUSAO DE VIDEOS");
 		Video video = videoDto.converterVideoPost(videoDto);
 		try {
@@ -57,11 +59,10 @@ public class VideoResource {
 		}
 	}
 	
-	@RequestMapping(value="/{id}",method=RequestMethod.GET)
+	@GetMapping(value="/{id}")
 	public ResponseEntity<Video> listarVideoPorId(@PathVariable Long id){
 		log.info("INICIANDO LISTAR VIDEO POR ID -> "+id);
-		Video video = new Video();
-		video = videoService.findById(id);
+		Video video = videoService.findById(id);
 		if(video != null) {
 			log.info("FINALIZADO LISTAR VIDEO POR ID -> "+id);
 			return ResponseEntity.ok(video);
@@ -72,24 +73,23 @@ public class VideoResource {
 		}
 	}
 	
-	@RequestMapping(method=RequestMethod.PUT)
-	public ResponseEntity<?> atualizarVideo(@RequestBody Video video) {
-		log.info("INICIANDO ATUALIZAR VIDEO ID -> "+video.getIdVideo());
-		if(videoService.findById(video.getIdVideo())!=null) {
-			videoService.insertVideo(video);
-			log.info("FINALIZADO ATUALIZAR VIDEO ID -> "+video.getIdVideo());
+	@PutMapping
+	public ResponseEntity<HttpServletResponse> atualizarVideo(@RequestBody VideoDto video) {
+		log.info("INICIANDO ATUALIZAR VIDEO ID -> "+video.getIdTitulo());
+		if(videoService.findById(video.getIdTitulo())!=null) {
+			videoService.insertVideo(video.converterVideoPut(video));
+			log.info("FINALIZADO ATUALIZAR VIDEO ID -> "+video.getIdTitulo());
 			return ResponseEntity.ok().build();
 		}else {
-			log.info("FINALIZADO ATUALIZAR VIDEO ID -> "+video.getIdVideo()+" VIDEO NAO ENCONTRADO");
+			log.info("FINALIZADO ATUALIZAR VIDEO ID -> "+video.getIdTitulo()+" VIDEO NAO ENCONTRADO");
 			return ResponseEntity.notFound().build();
 		}
 	}
 	
-	@RequestMapping(value="/{id}",method=RequestMethod.DELETE)
-	public ResponseEntity<?> deletarVideoPorId(@PathVariable Long id){
-		Video video = new Video();
-		video = videoService.findById(id);
+	@DeleteMapping(value="/{id}")
+	public ResponseEntity<HttpServletResponse> deletarVideoPorId(@PathVariable Long id){
 		log.info("INICIANDO DELETAR VIDEO ID -> "+ id);
+		Video video = videoService.findById(id);
 		if(video!=null) {
 			videoService.deletar(video);
 			log.info("FINALIZADO DELETAR VIDEO ID -> "+ id);
