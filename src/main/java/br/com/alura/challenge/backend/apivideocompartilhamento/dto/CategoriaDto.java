@@ -7,6 +7,7 @@ public class CategoriaDto {
 	
 	private String dsTitulo;
 	private CorEnum cor;
+	private Integer idCategoria;
 	
 	public CategoriaDto(String dsTitulo, CorEnum cor) {
 		super();
@@ -30,9 +31,21 @@ public class CategoriaDto {
 		this.cor = cor;
 	}
 	
+	public Integer getIdCategoria() {
+		return idCategoria;
+	}
+
+	public void setIdCategoria(Integer idCategoria) {
+		this.idCategoria = idCategoria;
+	}
+	
 	public Categoria converterCategoria(CategoriaDto categoriaDto) {
 		return new Categoria(null,categoriaDto.getDsTitulo(),categoriaDto.getCor());
 	}
 	
+	public Categoria converterCategoriaInput(CategoriaDto categoriaDto) {
+		return new Categoria(categoriaDto.getIdCategoria(),categoriaDto.getDsTitulo(),categoriaDto.getCor());
+	}
+
 	
 }

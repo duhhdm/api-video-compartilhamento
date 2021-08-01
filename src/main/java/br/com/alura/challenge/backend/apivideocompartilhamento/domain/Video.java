@@ -36,13 +36,16 @@ public class Video{
 		
 	}
 
-	public Video(Long idVideo, String dsTitulo, String dsVideo, String dsUrl) {
+	public Video(Long idVideo, String dsTitulo, String dsVideo, String dsUrl, Categoria idCategoria) {
 		super();
 		this.idVideo = idVideo;
 		this.dsTitulo = dsTitulo;
 		this.dsVideo = dsVideo;
 		this.dsUrl = dsUrl;
+		this.idCategoria = idCategoria;
 	}
+
+
 
 	public Long getIdVideo() {
 		return idVideo;
@@ -75,6 +78,17 @@ public class Video{
 	public void setDsUrl(String dsUrl) {
 		this.dsUrl = dsUrl;
 	}
-	
+
+
+
+	public Categoria getIdCategoria() {
+		return idCategoria;
+	}
+
+
+
+	public void setIdCategoria(Categoria idCategoria) {
+		this.idCategoria = idCategoria;
+	}
 	
 }

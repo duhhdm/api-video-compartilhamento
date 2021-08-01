@@ -1,5 +1,6 @@
 package br.com.alura.challenge.backend.apivideocompartilhamento.resource;
 
+import java.net.URI;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -48,11 +49,14 @@ public class VideoResource {
 	@PostMapping
 	public ResponseEntity<HttpServletResponse> inserirVideos(@Valid @RequestBody VideoDto videoDto) {
 		log.info("INICIANDO INCLUSAO DE VIDEOS");
-		Video video = videoDto.converterVideoPost(videoDto);
 		try {
-			videoService.insertVideo(video);
-			log.info("VIDEO INSERIDO COM SUCESSO -> "+video.getIdVideo());
-			return ResponseEntity.ok().build();
+			if(videoService.insertVideo(videoDto)) {
+				log.info("VIDEO INSERIDO COM SUCESSO");
+				return ResponseEntity.created(URI.create("")).build();
+			}
+			else {
+				return ResponseEntity.badRequest().build();
+			}
 		}catch(Exception e) {
 			log.error("OCORREU UM ERRO AO INCLUIR UM VIDEO");
 			return ResponseEntity.badRequest().build();
@@ -77,7 +81,7 @@ public class VideoResource {
 	public ResponseEntity<HttpServletResponse> atualizarVideo(@RequestBody VideoDto video) {
 		log.info("INICIANDO ATUALIZAR VIDEO ID -> "+video.getIdTitulo());
 		if(videoService.findById(video.getIdTitulo())!=null) {
-			videoService.insertVideo(video.converterVideoPut(video));
+			//videoService.insertVideo(video.converterVideoPut(video));
 			log.info("FINALIZADO ATUALIZAR VIDEO ID -> "+video.getIdTitulo());
 			return ResponseEntity.ok().build();
 		}else {
