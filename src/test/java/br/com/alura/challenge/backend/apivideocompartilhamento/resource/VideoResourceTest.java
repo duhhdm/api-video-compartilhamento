@@ -1,6 +1,5 @@
 package br.com.alura.challenge.backend.apivideocompartilhamento.resource;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -8,12 +7,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -33,7 +34,8 @@ import br.com.alura.challenge.backend.apivideocompartilhamento.service.VideoServ
 
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(VideoResource.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class VideoResourceTest {
 
 	@Autowired
@@ -45,9 +47,8 @@ class VideoResourceTest {
 	@MockBean
 	private VideoRepository videoRepository;
 	
-	@MockBean
+	@MockBean 
 	private CategoriaRepository categoriaRepository;
-	
 	
 	@Test
 	void chamadaListarVideosNotFound() throws Exception {
@@ -86,13 +87,14 @@ class VideoResourceTest {
 		VideoDto videoDto = new VideoDto(null,"testando","teste","www.danadinho",1);
 		Video video = videoDto.converterVideoPost(videoDto);
 		Categoria categoria = new Categoria(1,"danadinho",CorEnum.AZUL);
+		Optional<Categoria> categoriaOptional = Optional.of(categoria);
 		video.setIdCategoria(categoria);
 		Gson gson = new Gson();
 		String json = gson.toJson(videoDto);
 		video.setIdVideo(Long.parseLong("1"));
-		when(categoriaRepository.save(categoria)).thenReturn(categoria);
-		when(videoRepository.save(video)).thenReturn(video);
-		Mockito.when(videoService.insertVideo(videoDto)).thenReturn(true);
+		Mockito.when(categoriaRepository.findById(videoDto.getIdCategoria())).thenReturn(categoriaOptional);
+		Mockito.when(videoRepository.save(video)).thenReturn(video);
+		Mockito.when(videoService.insertVideo(videoDto)).thenReturn(video);
 		this.mockMvc.perform(post("/videos").content(json)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isCreated());
 	}
@@ -105,8 +107,8 @@ class VideoResourceTest {
 		String json = gson.toJson(videoDto);
 		video.setIdVideo(Long.parseLong("1"));
 		
-		when(videoRepository.save(video)).thenReturn(video);
-		
+		Mockito.when(videoRepository.save(video)).thenReturn(video);
+		Mockito.when(videoService.insertVideo(videoDto)).thenReturn(video);
 		this.mockMvc.perform(post("/videos").content(json)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
@@ -121,7 +123,7 @@ class VideoResourceTest {
 		video.setIdVideo(Long.parseLong("1"));
 		String json = gson.toJson(videoDto);
 		
-		when(videoRepository.save(video)).thenReturn(video);
+		Mockito.when(videoRepository.save(video)).thenReturn(video);
 		Mockito.when(videoService.findById(video.getIdVideo())).thenReturn(video1);
 		this.mockMvc.perform(put("/videos").content(json)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk());
@@ -135,23 +137,21 @@ class VideoResourceTest {
 		video.setIdVideo(Long.parseLong("1"));
 		String json = gson.toJson(video);
 		
-		when(videoRepository.save(video)).thenReturn(video);
+		Mockito.when(videoRepository.save(video)).thenReturn(video);
 		this.mockMvc.perform(put("/videos").content(json)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isNotFound());
 	}
 	
 	@Test
 	void deletarVideo() throws Exception {
-		Categoria categoria = new Categoria(1,"danadinho",CorEnum.AZUL);
-		Video video1 = new Video(Long.parseLong("1"),"testando","teste", "",categoria);
+		Video video1 = new Video(Long.parseLong("1"),"testando","teste", "",null);
 		Mockito.when(videoService.findById(video1.getIdVideo())).thenReturn(video1);
 		this.mockMvc.perform(delete("/videos/1")).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
 	void deletarVideoNotFound() throws Exception {
-		Categoria categoria = new Categoria(1,"danadinho",CorEnum.AZUL);
-		Video video1 = new Video(Long.parseLong("1"),"testando","teste", "",categoria);
+		Video video1 = new Video(Long.parseLong("1"),"testando","teste", "",null);
 		Mockito.when(videoService.findById(video1.getIdVideo())).thenReturn(video1);
 		this.mockMvc.perform(delete("/videos/2")).andExpect(MockMvcResultMatchers.status().isNotFound());
 	}

@@ -11,4 +11,6 @@ import br.com.alura.challenge.backend.apivideocompartilhamento.domain.Video;
 @Repository
 public interface VideoRepository extends JpaRepository<Video, Long>{
 	List<Video> findByIdCategoria(Categoria id);
+	
+	List<Video> findByDsTituloContains(String consulta);
 }

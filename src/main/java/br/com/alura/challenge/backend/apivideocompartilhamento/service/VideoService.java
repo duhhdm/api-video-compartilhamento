@@ -30,21 +30,18 @@ public class VideoService {
 		return videoRepository.findAll();
 	}
 	
-	public boolean insertVideo(VideoDto videoDto) {
-		if(videoDto.getIdTitulo()==null) {
+	public Video insertVideo(VideoDto videoDto) {
 			Video video = videoDto.converterVideoPost(videoDto);
 			Optional<Categoria> categoria = categoriaRepository.findById(videoDto.getIdCategoria());
 			if(categoria.isPresent()) {
 				video.setIdCategoria(categoria.get());
-				videoRepository.save(video);
-				return true;
+				video = videoRepository.save(video);
+				return video;
 			}
 			else {
-				return false;
+				return null;
 			}
 			
-		}
-		return false;
 		
 	}
 	
@@ -60,5 +57,9 @@ public class VideoService {
 	
 	public void deletar(Video video) {
 		videoRepository.delete(video);
+	}
+	
+	public List<Video> buscarVideoPorNome(String consulta){
+		return videoRepository.findByDsTituloContains(consulta);
 	}
 }
