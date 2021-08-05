@@ -94,7 +94,6 @@ class VideoResourceTest {
 		video.setIdVideo(Long.parseLong("1"));
 		Mockito.when(categoriaRepository.findById(videoDto.getIdCategoria())).thenReturn(categoriaOptional);
 		Mockito.when(videoRepository.save(video)).thenReturn(video);
-		Mockito.when(videoService.insertVideo(videoDto)).thenReturn(video);
 		this.mockMvc.perform(post("/videos").content(json)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isCreated());
 	}
@@ -108,7 +107,6 @@ class VideoResourceTest {
 		video.setIdVideo(Long.parseLong("1"));
 		
 		Mockito.when(videoRepository.save(video)).thenReturn(video);
-		Mockito.when(videoService.insertVideo(videoDto)).thenReturn(video);
 		this.mockMvc.perform(post("/videos").content(json)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}

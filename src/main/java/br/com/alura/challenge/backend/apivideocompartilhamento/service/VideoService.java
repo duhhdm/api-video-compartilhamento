@@ -30,16 +30,20 @@ public class VideoService {
 		return videoRepository.findAll();
 	}
 	
-	public Video insertVideo(VideoDto videoDto) {
+	public void insertVideo(VideoDto videoDto) {
 			Video video = videoDto.converterVideoPost(videoDto);
 			Optional<Categoria> categoria = categoriaRepository.findById(videoDto.getIdCategoria());
 			if(categoria.isPresent()) {
 				video.setIdCategoria(categoria.get());
-				video = videoRepository.save(video);
-				return video;
+				videoRepository.save(video);
+				
 			}
 			else {
-				return null;
+				Optional<Categoria> categoriaPadrao = categoriaRepository.findById(1);
+				if(categoriaPadrao.isPresent()) {
+					video.setIdCategoria(categoriaPadrao.get());
+					videoRepository.save(video);
+				}
 			}
 			
 		

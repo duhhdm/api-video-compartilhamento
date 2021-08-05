@@ -3,7 +3,7 @@ package br.com.alura.challenge.backend.apivideocompartilhamento.dto.en;
 
 public enum CorEnum {
 	
-	AZUL(0),VERMELHO(1),VERDE(2), AMARELO(3);
+	LIVRE(0),AZUL(1),VERMELHO(2),VERDE(3), AMARELO(4);
 
 	private final int valor;
 	

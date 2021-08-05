@@ -34,7 +34,7 @@ public class VideoResource {
 	static final Logger log = LogManager.getLogger(VideoResource.class);
 
 	@GetMapping
-	public ResponseEntity<List<Video>> listarVideos(@RequestParam("search") String consulta) {
+	public ResponseEntity<List<Video>> listarVideos(@RequestParam(value="search", required=false) String consulta) {
 		log.info("INICIANDO LISTAR VIDEOS");
 		List<Video> list;
 		
