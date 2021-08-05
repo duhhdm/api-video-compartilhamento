@@ -1,6 +1,7 @@
 package br.com.alura.challenge.backend.apivideocompartilhamento.dto;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import br.com.alura.challenge.backend.apivideocompartilhamento.domain.Video;
 
@@ -17,6 +18,9 @@ public class VideoDto {
 	
 	@NotEmpty(message = "Campo Url obrigatorio")
 	private String dsUrl;
+	
+	@NotNull(message = "Campo id Categoria obrigatorio")
+	private Integer idCategoria;
 	
 	public VideoDto() {
 		
@@ -53,27 +57,29 @@ public class VideoDto {
 	public void setDsUrl(String dsUrl) {
 		this.dsUrl = dsUrl;
 	}
-
-	public VideoDto(String dsTitulo, String dsVideo, String dsUrl) {
-		super();
-		this.dsTitulo = dsTitulo;
-		this.dsVideo = dsVideo;
-		this.dsUrl = dsUrl;
-	}
 	
-	public VideoDto(Long idTitulo, String dsTitulo, String dsVideo, String dsUrl) {
+	public Integer getIdCategoria() {
+		return idCategoria;
+	}
+
+	public void setIdCategoria(Integer idCategoria) {
+		this.idCategoria = idCategoria;
+	}
+
+	public VideoDto(Long idTitulo, @NotEmpty(message = "Campo Titulo obrigatorio") String dsTitulo,
+			@NotEmpty(message = "Campo Video obrigatorio") String dsVideo,
+			@NotEmpty(message = "Campo Url obrigatorio") String dsUrl,
+			@NotNull(message = "Campo id Categoria obrigatorio") Integer idCategoria) {
 		super();
 		this.idTitulo = idTitulo;
 		this.dsTitulo = dsTitulo;
 		this.dsVideo = dsVideo;
 		this.dsUrl = dsUrl;
+		this.idCategoria = idCategoria;
 	}
 
 	public Video converterVideoPost(VideoDto videoDto) {
-		return new Video(null,videoDto.getDsTitulo(),videoDto.getDsVideo(),videoDto.getDsUrl());
+		return new Video(null,videoDto.getDsTitulo(),videoDto.getDsVideo(),videoDto.getDsUrl(),null);
 	}
 	
-	public Video converterVideoPut(VideoDto videoDto) {
-		return new Video(videoDto.getIdTitulo(),videoDto.getDsTitulo(),videoDto.getDsVideo(),videoDto.getDsUrl());
-	}
 }
