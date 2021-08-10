@@ -1,12 +1,17 @@
 package br.com.alura.challenge.backend.apivideocompartilhamento.dto;
 
+import javax.validation.constraints.NotEmpty;
+
 import br.com.alura.challenge.backend.apivideocompartilhamento.domain.Categoria;
 import br.com.alura.challenge.backend.apivideocompartilhamento.dto.en.CorEnum;
 
 public class CategoriaDto {
 	
+	@NotEmpty(message = "Campo Titulo obrigatorio")
 	private String dsTitulo;
+	@NotEmpty(message = "Campo Cor obrigatorio")
 	private CorEnum cor;
+	
 	private Integer idCategoria;
 	
 	public CategoriaDto(String dsTitulo, CorEnum cor) {

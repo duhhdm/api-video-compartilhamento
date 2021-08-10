@@ -82,7 +82,7 @@ public class VideoResource {
 	public ResponseEntity<HttpServletResponse> atualizarVideo(@RequestBody VideoDto video) {
 		log.info("INICIANDO ATUALIZAR VIDEO ID -> " + video.getIdTitulo());
 		if (videoService.findById(video.getIdTitulo()) != null) {
-			// videoService.insertVideo(video.converterVideoPut(video));
+			videoService.updateVideo(video);
 			log.info("FINALIZADO ATUALIZAR VIDEO ID -> " + video.getIdTitulo());
 			return ResponseEntity.ok().build();
 		} else {

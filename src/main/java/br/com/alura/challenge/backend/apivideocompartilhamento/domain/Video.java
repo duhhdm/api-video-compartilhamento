@@ -47,6 +47,13 @@ public class Video{
 
 
 
+	public Video(Long idVideo, String dsTitulo, String dsVideo, String dsUrl) {
+		this.idVideo=idVideo;
+		this.dsTitulo=dsTitulo;
+		this.dsVideo=dsVideo;
+		this.dsUrl=dsUrl;
+	}
+
 	public Long getIdVideo() {
 		return idVideo;
 	}
