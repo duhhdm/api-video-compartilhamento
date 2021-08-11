@@ -66,4 +66,20 @@ public class VideoService {
 	public List<Video> buscarVideoPorNome(String consulta){
 		return videoRepository.findByDsTituloContains(consulta);
 	}
+	
+	public Video updateVideo(VideoDto videoDto) {
+		if(videoDto.getIdTitulo()==null) {
+			return null;
+		}
+		else {
+			Video video = new Video(videoDto.getIdTitulo(), videoDto.getDsTitulo(), videoDto.getDsVideo(), videoDto.getDsUrl());
+			if(videoDto.getIdCategoria()!=null) {
+				Optional<Categoria> categoria = categoriaRepository.findById(videoDto.getIdCategoria());
+				if(categoria.isPresent()) {
+					video.setIdCategoria(categoria.get());
+				}
+			}
+			return videoRepository.save(video);
+		}
+	}
 }
