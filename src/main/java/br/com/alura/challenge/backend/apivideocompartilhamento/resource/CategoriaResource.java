@@ -94,7 +94,7 @@ public class CategoriaResource {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<HttpServletResponse> deletarCategoria(Integer id) {
+	public ResponseEntity<HttpServletResponse> deletarCategoria(@PathVariable("id") Integer id) {
 		log.info("INICIANDO DELETAR CATEGORIA -> " + id);
 		Categoria categoria = categoriaService.findById(id);
 		if (categoria != null) {
