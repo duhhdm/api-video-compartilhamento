@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.alura.challenge.backend.apivideocompartilhamento.domain.Categoria;
@@ -20,8 +22,8 @@ public class CategoriaService {
 	@Autowired
 	VideoRepository videoRepository;
 	
-	public List<Categoria> findAll(){
-		return categoriaRepository.findAll();
+	public Page<Categoria> findAll(Pageable paginacao){
+		return categoriaRepository.findAll(paginacao);
 	}
 
 	public void save(Categoria categoria) {

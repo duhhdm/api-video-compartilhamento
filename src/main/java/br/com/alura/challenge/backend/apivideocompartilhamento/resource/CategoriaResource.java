@@ -9,6 +9,9 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alura.challenge.backend.apivideocompartilhamento.domain.Categoria;
@@ -34,9 +38,10 @@ public class CategoriaResource {
 	CategoriaService categoriaService;
 
 	@GetMapping
-	public ResponseEntity<List<Categoria>> listarTodos() {
+	public ResponseEntity<Page<Categoria>> listarTodos(	@RequestParam(value="pagina", required=true)Integer pagina) {
 		log.info("INICIANDO LISTAR CATEGORIAS");
-		List<Categoria> list = categoriaService.findAll();
+		Pageable paginacao = PageRequest.of(pagina, 5);
+		Page<Categoria> list = categoriaService.findAll(paginacao);
 
 		if (list.isEmpty()) {
 			log.info("FINALIZANDO LISTAR CATEGORIAS");

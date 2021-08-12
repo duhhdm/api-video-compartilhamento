@@ -1,7 +1,6 @@
 package br.com.alura.challenge.backend.apivideocompartilhamento.resource;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -9,6 +8,9 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,14 +36,17 @@ public class VideoResource {
 	static final Logger log = LogManager.getLogger(VideoResource.class);
 
 	@GetMapping
-	public ResponseEntity<List<Video>> listarVideos(@RequestParam(value="search", required=false) String consulta) {
+	public ResponseEntity<Page<Video>> listarVideos(
+			@RequestParam(value="search", required=false) String consulta,
+			@RequestParam(value="pagina", required=true)Integer pagina) {
 		log.info("INICIANDO LISTAR VIDEOS");
-		List<Video> list;
+		Pageable paginacao = PageRequest.of(pagina, 5);
+		Page<Video> list;
 		
 		if(consulta==null)
-			list=videoService.findAll();
+			list=videoService.findAll(paginacao);
 		else {
-			list=videoService.buscarVideoPorNome(consulta);
+			list=videoService.buscarVideoPorNome(consulta,paginacao);
 		}
 		if (list.isEmpty()) {
 			log.info("FINALIZANDO LISTAR VIDEOS");

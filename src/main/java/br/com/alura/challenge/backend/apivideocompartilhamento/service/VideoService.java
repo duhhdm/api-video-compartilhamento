@@ -1,11 +1,12 @@
 package br.com.alura.challenge.backend.apivideocompartilhamento.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.alura.challenge.backend.apivideocompartilhamento.domain.Categoria;
@@ -26,8 +27,8 @@ public class VideoService {
 	@Autowired
 	CategoriaRepository categoriaRepository;
 	
-	public List<Video> findAll(){
-		return videoRepository.findAll();
+	public Page<Video> findAll(Pageable paginacao){
+		return videoRepository.findAll(paginacao);
 	}
 	
 	public void insertVideo(VideoDto videoDto) {
@@ -63,8 +64,8 @@ public class VideoService {
 		videoRepository.delete(video);
 	}
 	
-	public List<Video> buscarVideoPorNome(String consulta){
-		return videoRepository.findByDsTituloContains(consulta);
+	public Page<Video> buscarVideoPorNome(String consulta, Pageable paginacao){
+		return videoRepository.findByDsTituloContains(consulta, paginacao);
 	}
 	
 	public Video updateVideo(VideoDto videoDto) {

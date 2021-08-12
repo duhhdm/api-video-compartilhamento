@@ -16,6 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -51,17 +55,19 @@ class VideoResourceTest {
 	private CategoriaRepository categoriaRepository;
 	
 	@Test
-	void chamadaListarVideosNotFound() throws Exception {
-		this.mockMvc.perform(get("/videos")).andExpect(MockMvcResultMatchers.status().isNotFound());
+	void chamadaListarVideosBadRequest() throws Exception {
+		this.mockMvc.perform(get("/videos")).andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
 	@Test
 	void chamadaListarVideos() throws Exception {
 		List<Video> list = new ArrayList<>();
+		Pageable paginacao = PageRequest.of(0, 5);
 		Video video1 = new Video(Long.parseLong("1"),"testando","teste", "",new Categoria(1, "danadinho", CorEnum.AMARELO));
 		list.add(video1);
-		Mockito.when(videoService.findAll()).thenReturn(list);
-		this.mockMvc.perform(get("/videos")).andExpect(MockMvcResultMatchers.status().isOk());
+		Page<Video> listPage = new PageImpl<>(list,paginacao,list.size());
+		Mockito.when(videoService.findAll(paginacao)).thenReturn(listPage);
+		this.mockMvc.perform(get("/videos?pagina=0")).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test

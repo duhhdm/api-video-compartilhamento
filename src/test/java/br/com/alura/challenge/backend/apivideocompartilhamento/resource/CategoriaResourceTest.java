@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -55,14 +59,16 @@ class CategoriaResourceTest {
 	void findAll200() throws Exception {
 		List<Categoria> list = new ArrayList<>();
 		Categoria categoria = new Categoria(1, "teste categoria", CorEnum.LIVRE);
+		Pageable paginacao = PageRequest.of(0, 5);
 		list.add(categoria);
-		Mockito.when(categoriaService.findAll()).thenReturn(list);
-		this.mockMvc.perform(get("/categorias")).andExpect(MockMvcResultMatchers.status().isOk());
+		Page<Categoria> categoriaPage = new PageImpl<>(list,paginacao,list.size());
+		Mockito.when(categoriaService.findAll(paginacao)).thenReturn(categoriaPage);
+		this.mockMvc.perform(get("/categorias?pagina=0")).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
-	void chamadaListarCategoriasNotFound() throws Exception {
-		this.mockMvc.perform(get("/categorias")).andExpect(MockMvcResultMatchers.status().isNotFound());
+	void chamadaListarCategoriasBadRequest() throws Exception {
+		this.mockMvc.perform(get("/categorias")).andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
 	@Test
